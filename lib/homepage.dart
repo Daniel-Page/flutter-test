@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/ball.dart';
-import 'package:flutter_application_1/brick.dart';
-import 'package:flutter_application_1/coverscreen.dart';
+import 'package:mobile_pong/ball.dart';
+import 'package:mobile_pong/brick.dart';
+import 'package:mobile_pong/coverscreen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
