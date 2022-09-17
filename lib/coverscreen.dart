@@ -11,7 +11,7 @@ class CoverScreen extends StatelessWidget {
         alignment: const Alignment(0, -0.2),
         child: Text(
           gameStarted ? '' : 'TAP TO PLAY',
-          style: const TextStyle(color: Colors.white, fontSize: 60),
+          style: const TextStyle(color: Colors.white, fontSize: 30),
         ));
   }
 }
