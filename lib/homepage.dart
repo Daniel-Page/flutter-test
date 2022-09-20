@@ -18,6 +18,7 @@ enum direction { UP, DOWN, LEFT, RIGHT }
 class _HomePage extends State<HomePage> {
   // player variables (bottom brick)
   double playerX = 0;
+  double playerWidth = 0.4; // out of 2
 
   // ball variables
   double ballX = 0;
@@ -37,16 +38,38 @@ class _HomePage extends State<HomePage> {
 
       // move ball
       moveBall();
+
+      // check if player is dead
+      if (isPlayerDead()) {
+        timer.cancel();
+        resetGame();
+      }
     });
+  }
+
+  void resetGame() {
+    setState(() {
+      gameHasStarted = false;
+      ballX = 0;
+      ballY = 0;
+      playerX = 0;
+    });
+  }
+
+  bool isPlayerDead() {
+    if (ballY >= 1) {
+      return true;
+    }
+    return false;
   }
 
   void updateDirection() {
     setState(() {
-      // vertical movement
-      if (ballY >= 0.9) {
-        ballYDirection = direction.DOWN;
-      } else if (ballY <= -0.9) {
+      // update vertical direction
+      if (ballY >= 0.9 && playerX + playerWidth >= ballX && playerX <= ballX) {
         ballYDirection = direction.UP;
+      } else if (ballY <= -0.9) {
+        ballYDirection = direction.DOWN;
       }
 
       // horizontal movement
@@ -61,9 +84,9 @@ class _HomePage extends State<HomePage> {
   void moveBall() {
     setState(() {
       // vertical movement
-      if (ballYDirection == direction.UP) {
+      if (ballYDirection == direction.DOWN) {
         ballY += 0.001;
-      } else if (ballYDirection == direction.DOWN) {
+      } else if (ballYDirection == direction.UP) {
         ballY -= 0.001;
       }
 
@@ -78,13 +101,13 @@ class _HomePage extends State<HomePage> {
 
   void moveLeft() {
     setState(() {
-      playerX -= 0.1;
+      playerX -= 0.05;
     });
   }
 
   void moveRight() {
     setState(() {
-      playerX += 0.1;
+      playerX += 0.05;
     });
   }
 
@@ -110,8 +133,12 @@ class _HomePage extends State<HomePage> {
                     child: Stack(
                   children: [
                     CoverScreen(gameStarted: gameHasStarted), // tap to play
-                    MyBrick(x: 0.0, y: -0.9), // top brick
-                    MyBrick(x: playerX, y: 0.9), // bottom brick
+                    MyBrick(
+                        x: 0.0, y: -0.9, brickWidth: playerWidth), // top brick
+                    MyBrick(
+                        x: playerX,
+                        y: 0.9,
+                        brickWidth: playerWidth), // bottom brick
                     Ball(x: ballX, y: ballY) // ball
                   ],
                 )))));
