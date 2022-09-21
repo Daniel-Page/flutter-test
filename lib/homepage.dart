@@ -17,8 +17,13 @@ enum direction { UP, DOWN, LEFT, RIGHT }
 
 class _HomePage extends State<HomePage> {
   // player variables (bottom brick)
-  double playerX = 0;
-  double playerWidth = 0.4; // out of 2
+  double playerX = -0.2;
+  double brickWidth = 0.4; // out of 2
+  bool isMovingLeft = false;
+  bool isMovingRight = false;
+
+  // enemy variables (top brick)
+  double enemyX = -0.2;
 
   // ball variables
   double ballX = 0;
@@ -27,7 +32,6 @@ class _HomePage extends State<HomePage> {
   var ballXDirection = direction.LEFT;
 
   // game settings
-
   bool gameHasStarted = false;
 
   void startGame() {
@@ -39,6 +43,15 @@ class _HomePage extends State<HomePage> {
       // move ball
       moveBall();
 
+      // move enemy
+      moveEnemy();
+
+      if (isMovingLeft) {
+        moveLeft(0.003);
+      } else if (isMovingRight) {
+        moveRight(0.003);
+      }
+
       // check if player is dead
       if (isPlayerDead()) {
         timer.cancel();
@@ -47,12 +60,18 @@ class _HomePage extends State<HomePage> {
     });
   }
 
+  void moveEnemy() {
+    setState(() {
+      enemyX = ballX - 0.2;
+    });
+  }
+
   void resetGame() {
     setState(() {
       gameHasStarted = false;
       ballX = 0;
       ballY = 0;
-      playerX = 0;
+      playerX = -0.2;
     });
   }
 
@@ -66,7 +85,7 @@ class _HomePage extends State<HomePage> {
   void updateDirection() {
     setState(() {
       // update vertical direction
-      if (ballY >= 0.9 && playerX + playerWidth >= ballX && playerX <= ballX) {
+      if (ballY >= 0.9 && playerX + brickWidth >= ballX && playerX <= ballX) {
         ballYDirection = direction.UP;
       } else if (ballY <= -0.9) {
         ballYDirection = direction.DOWN;
@@ -99,15 +118,19 @@ class _HomePage extends State<HomePage> {
     });
   }
 
-  void moveLeft() {
+  void moveLeft(incr) {
     setState(() {
-      playerX -= 0.05;
+      if (playerX > -1 - 0.2) {
+        playerX -= incr;
+      }
     });
   }
 
-  void moveRight() {
+  void moveRight(incr) {
     setState(() {
-      playerX += 0.05;
+      if (playerX < 1 - 0.2) {
+        playerX += incr;
+      }
     });
   }
 
@@ -119,27 +142,65 @@ class _HomePage extends State<HomePage> {
         onKey: (event) {
           if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft) ||
               event.isKeyPressed(LogicalKeyboardKey.keyA)) {
-            moveLeft();
+            moveLeft(0.05);
           } else if (event.isKeyPressed(LogicalKeyboardKey.arrowRight) ||
               event.isKeyPressed(LogicalKeyboardKey.keyD)) {
-            moveRight();
+            moveRight(0.05);
           }
         },
         child: GestureDetector(
             onTap: startGame,
             child: Scaffold(
-                backgroundColor: Colors.grey[900],
+                backgroundColor: Colors.black,
                 body: Center(
                     child: Stack(
                   children: [
                     CoverScreen(gameStarted: gameHasStarted), // tap to play
                     MyBrick(
-                        x: 0.0, y: -0.9, brickWidth: playerWidth), // top brick
+                        x: enemyX,
+                        y: -0.9,
+                        brickWidth: brickWidth), // top brick
                     MyBrick(
                         x: playerX,
                         y: 0.9,
-                        brickWidth: playerWidth), // bottom brick
-                    Ball(x: ballX, y: ballY) // ball
+                        brickWidth: brickWidth), // bottom brick
+                    Ball(x: ballX, y: ballY), // ball,
+                    // Container(
+                    //     alignment: Alignment(playerX, 0.9 + 0.003),
+                    //     child:
+                    //         Container(width: 2, height: 20, color: Colors.red)),
+                    Container(
+                        alignment: Alignment(1, 1),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.height / 2,
+                          // color: Color.fromARGB(50, 66, 142, 78),
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTapDown: (event) {
+                              isMovingRight = true;
+                            },
+                            onTapUp: (event) {
+                              isMovingRight = false;
+                            },
+                          ),
+                        )),
+                    Container(
+                        alignment: Alignment(-1, 1),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.height / 2,
+                          // color: Color.fromARGB(49, 255, 0, 0),
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTapDown: (event) {
+                              isMovingLeft = true;
+                            },
+                            onTapUp: (event) {
+                              isMovingLeft = false;
+                            },
+                          ),
+                        )),
                   ],
                 )))));
   }
