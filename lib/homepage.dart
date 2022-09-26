@@ -94,14 +94,15 @@ class _HomePage extends State<HomePage> {
           ballX >= playerX - brickWidth / 2 &&
           ballX <= playerX + brickWidth / 2) {
         ballYDirection = direction.UP;
-      } else if (ballY <= -playerY + 0.5 * (1 / 40) * 2) {
+      } else if (ballY <=
+          -playerY + 0.5 * brickHeight + ballDiameter / 2 - 0.01) {
         ballYDirection = direction.DOWN;
       }
 
       // horizontal movement
-      if (ballX >= 1) {
+      if (ballX >= 1 - ballDiameter / 2) {
         ballXDirection = direction.LEFT;
-      } else if (ballX <= -1) {
+      } else if (ballX <= -1 + ballDiameter / 2) {
         ballXDirection = direction.RIGHT;
       }
     });
@@ -166,14 +167,18 @@ class _HomePage extends State<HomePage> {
                     MyBrick(
                         x: enemyX,
                         y: -playerY,
-                        brickWidth: brickWidth,
-                        brickHeight: brickHeight), // top brick
+                        width: brickWidth,
+                        height: brickHeight), // top brick
                     MyBrick(
                         x: playerX,
                         y: playerY,
-                        brickWidth: brickWidth,
-                        brickHeight: brickHeight), // bottom brick
-                    Ball(x: ballX, y: ballY), // ball,
+                        width: brickWidth,
+                        height: brickHeight), // bottom brick
+                    Ball(
+                        x: ballX,
+                        y: ballY,
+                        width: ballDiameter,
+                        height: ballDiameter), // ball,
                     // Container(
                     //     alignment: Alignment(playerX, 0.9 + 0.003),
                     //     child:
