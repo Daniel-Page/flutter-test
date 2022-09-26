@@ -17,13 +17,13 @@ enum direction { UP, DOWN, LEFT, RIGHT }
 
 class _HomePage extends State<HomePage> {
   // player variables (bottom brick)
-  double playerX = -0.2;
+  double playerX = 0;
   double brickWidth = 0.4; // out of 2
   bool isMovingLeft = false;
   bool isMovingRight = false;
 
   // enemy variables (top brick)
-  double enemyX = -0.2;
+  double enemyX = 0;
 
   // ball variables
   double ballX = 0;
@@ -62,7 +62,7 @@ class _HomePage extends State<HomePage> {
 
   void moveEnemy() {
     setState(() {
-      enemyX = ballX - 0.2;
+      enemyX = ballX;
     });
   }
 
@@ -71,7 +71,7 @@ class _HomePage extends State<HomePage> {
       gameHasStarted = false;
       ballX = 0;
       ballY = 0;
-      playerX = -0.2;
+      playerX = 0;
     });
   }
 
@@ -85,9 +85,11 @@ class _HomePage extends State<HomePage> {
   void updateDirection() {
     setState(() {
       // update vertical direction
-      if (ballY >= 0.9 && playerX + brickWidth >= ballX && playerX <= ballX) {
+      if (ballY >= 0.9 - 0.5 * ((1 / 40) * 2) &&
+          ballX >= playerX - brickWidth / 2 &&
+          ballX <= playerX + brickWidth / 2) {
         ballYDirection = direction.UP;
-      } else if (ballY <= -0.9) {
+      } else if (ballY <= -0.9 + 0.5 * (1 / 40) * 2) {
         ballYDirection = direction.DOWN;
       }
 
@@ -120,7 +122,7 @@ class _HomePage extends State<HomePage> {
 
   void moveLeft(incr) {
     setState(() {
-      if (playerX > -1 - 0.2) {
+      if (playerX > -1) {
         playerX -= incr;
       }
     });
@@ -128,7 +130,7 @@ class _HomePage extends State<HomePage> {
 
   void moveRight(incr) {
     setState(() {
-      if (playerX < 1 - 0.2) {
+      if (playerX < 1) {
         playerX += incr;
       }
     });

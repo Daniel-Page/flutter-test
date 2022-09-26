@@ -9,12 +9,12 @@ class MyBrick extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        alignment: Alignment((2 * x + brickWidth) / (2 - brickWidth), y),
+        alignment: Alignment(x * (1.0 + brickWidth / 2), y),
         child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Container(
                 color: Colors.white,
-                height: 20,
+                height: MediaQuery.of(context).size.height / 40,
                 width: MediaQuery.of(context).size.width / 5)));
   }
 }
