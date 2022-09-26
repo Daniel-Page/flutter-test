@@ -9,12 +9,12 @@ class Ball extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment(x, y),
+      alignment: Alignment(x * (1 + 0.05 / 2), y * (1 + 0.05 / 2)),
       child: Container(
         decoration:
             const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-        width: 20,
-        height: 20,
+        width: MediaQuery.of(context).size.height / 40,
+        height: MediaQuery.of(context).size.height / 40,
       ),
     );
   }

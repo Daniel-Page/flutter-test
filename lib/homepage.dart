@@ -19,6 +19,9 @@ class _HomePage extends State<HomePage> {
   // player variables (bottom brick)
   double playerX = 0;
   double brickWidth = 0.4; // out of 2
+  double brickHeight = 0.05; // out of 2
+  double playerY = 0.90;
+
   bool isMovingLeft = false;
   bool isMovingRight = false;
 
@@ -28,6 +31,7 @@ class _HomePage extends State<HomePage> {
   // ball variables
   double ballX = 0;
   double ballY = 0;
+  double ballDiameter = 0.05;
   var ballYDirection = direction.DOWN;
   var ballXDirection = direction.LEFT;
 
@@ -85,12 +89,11 @@ class _HomePage extends State<HomePage> {
   void updateDirection() {
     setState(() {
       // update vertical direction
-      if (ballY >= 0.89 - 0.5 * ((1 / 40) * 2) &&
-          ballY <= 0.91 - 0.5 * ((1 / 40) * 2) &&
+      if (ballY >= playerY - 0.5 * brickHeight - ballDiameter / 2 + 0.01 &&
           ballX >= playerX - brickWidth / 2 &&
           ballX <= playerX + brickWidth / 2) {
         ballYDirection = direction.UP;
-      } else if (ballY <= -0.89 + 0.5 * (1 / 40) * 2) {
+      } else if (ballY <= -playerY + 0.5 * (1 / 40) * 2) {
         ballYDirection = direction.DOWN;
       }
 
@@ -161,12 +164,14 @@ class _HomePage extends State<HomePage> {
                     CoverScreen(gameStarted: gameHasStarted), // tap to play
                     MyBrick(
                         x: enemyX,
-                        y: -0.9,
-                        brickWidth: brickWidth), // top brick
+                        y: -playerY,
+                        brickWidth: brickWidth,
+                        brickHeight: brickHeight), // top brick
                     MyBrick(
                         x: playerX,
-                        y: 0.9,
-                        brickWidth: brickWidth), // bottom brick
+                        y: playerY,
+                        brickWidth: brickWidth,
+                        brickHeight: brickHeight), // bottom brick
                     Ball(x: ballX, y: ballY), // ball,
                     // Container(
                     //     alignment: Alignment(playerX, 0.9 + 0.003),
