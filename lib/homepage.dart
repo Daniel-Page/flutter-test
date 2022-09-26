@@ -85,11 +85,12 @@ class _HomePage extends State<HomePage> {
   void updateDirection() {
     setState(() {
       // update vertical direction
-      if (ballY >= 0.9 - 0.5 * ((1 / 40) * 2) &&
+      if (ballY >= 0.89 - 0.5 * ((1 / 40) * 2) &&
+          ballY <= 0.91 - 0.5 * ((1 / 40) * 2) &&
           ballX >= playerX - brickWidth / 2 &&
           ballX <= playerX + brickWidth / 2) {
         ballYDirection = direction.UP;
-      } else if (ballY <= -0.9 + 0.5 * (1 / 40) * 2) {
+      } else if (ballY <= -0.89 + 0.5 * (1 / 40) * 2) {
         ballYDirection = direction.DOWN;
       }
 
