@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:mobile_pong/ball.dart';
 import 'package:mobile_pong/brick.dart';
 import 'package:mobile_pong/coverscreen.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,6 +17,8 @@ class HomePage extends StatefulWidget {
 enum direction { UP, DOWN, LEFT, RIGHT }
 
 class _HomePage extends State<HomePage> {
+  final player = AudioPlayer();
+
   // player variables (bottom brick)
   double playerX = 0;
   double brickWidth = 0.4; // out of 2
@@ -86,6 +89,10 @@ class _HomePage extends State<HomePage> {
     return false;
   }
 
+  void playSound() async {
+    await player.play(AssetSource("bounce.mp3"));
+  }
+
   void updateDirection() {
     setState(() {
       // update vertical direction
@@ -94,9 +101,11 @@ class _HomePage extends State<HomePage> {
           ballX >= playerX - brickWidth / 2 &&
           ballX <= playerX + brickWidth / 2) {
         ballYDirection = direction.UP;
+        playSound();
       } else if (ballY <=
           -playerY + 0.5 * brickHeight + ballDiameter / 2 - 0.01) {
         ballYDirection = direction.DOWN;
+        playSound();
       }
 
       // horizontal movement
