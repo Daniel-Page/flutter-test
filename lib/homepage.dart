@@ -42,29 +42,32 @@ class _HomePage extends State<HomePage> {
   bool gameHasStarted = false;
 
   void startGame() {
-    gameHasStarted = true;
-    Timer.periodic(const Duration(milliseconds: 1), (timer) {
-      // update direction
-      updateDirection();
+    if (!gameHasStarted) {
+      gameHasStarted = true;
+      initSound();
+      Timer.periodic(const Duration(milliseconds: 1), (timer) {
+        // update direction
+        updateDirection();
 
-      // move ball
-      moveBall();
+        // move ball
+        moveBall();
 
-      // move enemy
-      moveEnemy();
+        // move enemy
+        moveEnemy();
 
-      if (isMovingLeft) {
-        moveLeft(0.003);
-      } else if (isMovingRight) {
-        moveRight(0.003);
-      }
+        if (isMovingLeft) {
+          moveLeft(0.003);
+        } else if (isMovingRight) {
+          moveRight(0.003);
+        }
 
-      // check if player is dead
-      if (isPlayerDead()) {
-        timer.cancel();
-        resetGame();
-      }
-    });
+        // check if player is dead
+        if (isPlayerDead()) {
+          timer.cancel();
+          resetGame();
+        }
+      });
+    }
   }
 
   void moveEnemy() {
@@ -165,66 +168,68 @@ class _HomePage extends State<HomePage> {
             moveRight(0.05);
           }
         },
-        child: GestureDetector(
-            onTap: startGame,
-            child: Scaffold(
-                backgroundColor: Colors.black,
-                body: Center(
-                    child: Stack(
-                  children: [
-                    CoverScreen(gameStarted: gameHasStarted), // tap to play
-                    MyBrick(
-                        x: enemyX,
-                        y: -playerY,
-                        width: brickWidth,
-                        height: brickHeight), // top brick
-                    MyBrick(
-                        x: playerX,
-                        y: playerY,
-                        width: brickWidth,
-                        height: brickHeight), // bottom brick
-                    Ball(
-                        x: ballX,
-                        y: ballY,
-                        width: ballDiameter,
-                        height: ballDiameter), // ball,
-                    // Container(
-                    //     alignment: Alignment(playerX, 0.9 + 0.003),
-                    //     child:
-                    //         Container(width: 2, height: 20, color: Colors.red)),
-                    Container(
-                        alignment: Alignment(1, 1),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          height: MediaQuery.of(context).size.height / 2,
-                          // color: Color.fromARGB(50, 66, 142, 78),
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTapDown: (event) {
-                              isMovingRight = true;
-                            },
-                            onTapUp: (event) {
-                              isMovingRight = false;
-                            },
-                          ),
-                        )),
-                    Container(
-                        alignment: Alignment(-1, 1),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          height: MediaQuery.of(context).size.height / 2,
-                          // color: Color.fromARGB(49, 255, 0, 0),
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTapDown: (event) {
-                              isMovingLeft = true;
-                            },
-                            onTapUp: (event) {
-                              isMovingLeft = false;
-                            },
-                          ),
-                        )),
-                  ],
-                )))));
+        child: Stack(children: [
+          Scaffold(
+              backgroundColor: Color.fromARGB(255, 72, 103, 254),
+              body: Center(
+                  child: Stack(
+                children: [
+                  CoverScreen(gameStarted: gameHasStarted), // tap to play
+                  MyBrick(
+                      x: enemyX,
+                      y: -playerY,
+                      width: brickWidth,
+                      height: brickHeight), // top brick
+                  MyBrick(
+                      x: playerX,
+                      y: playerY,
+                      width: brickWidth,
+                      height: brickHeight), // bottom brick
+                  Ball(
+                      x: ballX,
+                      y: ballY,
+                      width: ballDiameter,
+                      height: ballDiameter), // ball,
+                  // Container(
+                  //     alignment: Alignment(playerX, 0.9 + 0.003),
+                  //     child:
+                  //         Container(width: 2, height: 20, color: Colors.red)),
+                ],
+              ))),
+          Container(
+              alignment: Alignment(-1, 1),
+              child: Container(
+                width: MediaQuery.of(context).size.width / 2,
+                height: MediaQuery.of(context).size.height / 1,
+                // color: Color.fromARGB(114, 255, 0, 0),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: startGame,
+                  onTapDown: (event) {
+                    isMovingLeft = true;
+                  },
+                  onTapUp: (event) {
+                    isMovingLeft = false;
+                  },
+                ),
+              )),
+          Container(
+              alignment: Alignment(1, 1),
+              child: Container(
+                width: MediaQuery.of(context).size.width / 2,
+                height: MediaQuery.of(context).size.height / 1,
+                // color: Color.fromARGB(49, 0, 255, 38),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: startGame,
+                  onTapDown: (event) {
+                    isMovingRight = true;
+                  },
+                  onTapUp: (event) {
+                    isMovingRight = false;
+                  },
+                ),
+              )),
+        ]));
   }
 }
